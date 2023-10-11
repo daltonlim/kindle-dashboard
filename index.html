@@ -9,22 +9,41 @@
       src: url('fonts/GothamRnd-Bold.ttf') format('truetype');
     }
 
+    h1{
+      text-align: center;
+      font-size: 100px ;
+    }
+
     body {
       font-family: 'GothamRnd-Bold';
     }
 
     #currentWeather {
       display: flex;
+      align-content: center;
+      justify-content:center;
     }
 
     #currentWeatherText {
       font-size: 200px;
+      margin: 0;
     }
 
+
+    #currentWeatherIconContainer{
+      height: 100% ;
+      vertical-align: middle;
+    }
+
+    #currentWeatherIcon{
+      height: 100% ;
+      vertical-align: middle;
+    }
     #hourlyWeather {
       display: flex;
       align-content: center;
       text-align: center;
+      justify-content:center;
     }
   </style>
   <script>
@@ -40,7 +59,7 @@
 
     setWeather = (currentTemp) => {
       const weatherDiv = document.querySelector('#currentWeatherText');
-      weatherDiv.innerText = currentTemp
+      weatherDiv.innerText = `${currentTemp}°C`
     }
 
     // Replace with your own API Key
@@ -62,16 +81,16 @@
         return response.json();
       })
       .then(data => {
-        data.hourly.slice(0, 4).forEach(d => {
+        data.hourly.slice(1,5).forEach(d => {
           const hourlyWeatherDiv = document.querySelector("#hourlyWeather");
 
           const icon = d.weather[0].icon
 
           const characterElement2 = document.createElement('p');
-          characterElement2.innerHTML = `<div class="weather-icon">
+          characterElement2.innerHTML = `<div class="weatherIcon">
 <p>${timeConverter(d.dt)}</p>
 <img src="icons/${icon}.png" />
-<p>${d.temp}</p>
+<p>${Math.round(d.temp)}°C</p>
 </div>
 `
           hourlyWeatherDiv.append(characterElement2);
@@ -98,7 +117,9 @@
 <body>
 <h1>Weather</h1>
 <div id="currentWeather">
-  <img id="currentWeatherIcon"/>
+  <div id="currentWeatherIconContainer">
+    <img id="currentWeatherIcon"/>
+  </div>
   <p id="currentWeatherText"></p>
 </div>
 <div id="hourlyWeather"></div>
