@@ -1,0 +1,100 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    @font-face {
+      font-family: 'GothamRnd-Bold';
+      src: url('fonts/GothamRnd-Bold.ttf') format('truetype');
+    }
+
+    body{
+      font-family: 'GothamRnd-Bold';
+    }
+
+
+    #current_weather {
+      font-size: 20px;
+    }
+    #hourly_weather{
+      display: flex;
+      align-content: center;
+      text-align: center;
+    }
+  </style>
+  <script>
+    fetch('http://api.openweathermap.org/data/2.5/weather?q=Sydney&appid=ece0d8b1e9f26bc9f8b45549d4585e47')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        setWeather(data.main.temp-273)
+      })
+      .catch(error => console.log('Error:', error));
+
+    setWeather = (current_temp )=> {
+      const weatherDiv = document.querySelector('#current_weather');
+      weatherDiv.innerText = current_temp
+    }
+
+    // Replace with your own API Key
+    const apiKey = "ece0d8b1e9f26bc9f8b45549d4585e47";
+
+    // Sydney's coordinates
+    const lat = "-33.8688";
+    const lon = "151.2093";
+
+    // OpenWeatherMap API URL for hourly forecast
+    const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily,alerts&units=metric&appid=${apiKey}`;
+
+    // Use Fetch API to get the data
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        data.hourly.slice(0, 4).forEach(d => {
+          const hourlyWeatherDiv = document.querySelector("#hourly_weather");
+
+
+          const icon = d.weather[0].icon
+
+          const characterElement2 = document.createElement('p');
+          characterElement2.innerHTML = `<div class="weather-icon">
+<p>${timeConverter(d.dt)}</p>
+<img src="icons/${icon}.png" />
+<p>${d.temp}</p>
+</div>
+`
+          hourlyWeatherDiv.append(characterElement2);
+
+          console.log(timeConverter(d.dt))
+        })
+      })
+      .catch(error => {
+        console.log('There has been a problem with your fetch operation: ', error);
+      });
+
+
+
+    function timeConverter(UNIX_timestamp){
+      var a = new Date(UNIX_timestamp * 1000).toLocaleTimeString('en-US',
+        {timeZone: "Australia/Sydney",hour12:true,hour:'numeric'}
+      );
+      return a;
+    }
+  </script>
+
+  <title>Daltons Dashboard</title>
+</head>
+
+<body>
+  <h1>Weather</h1>
+  <div id="current_weather"></div>
+  <div id="hourly_weather"></div>
+</body>
+
+</html>
