@@ -12,6 +12,7 @@
     h1{
       text-align: center;
       font-size: 100px ;
+      margin: 40px 0  20px 0;
     }
 
     body {
@@ -26,13 +27,19 @@
 
     #currentWeatherText {
       font-size: 200px;
-      margin: 0;
+      margin: 10px;
     }
 
 
+    #hourlyWeather >p {
+      margin: 02px;
+    }
+
     #currentWeatherIconContainer{
-      height: 100% ;
-      vertical-align: middle;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px; /* Or any other value */
     }
 
     #currentWeatherIcon{
@@ -44,6 +51,15 @@
       align-content: center;
       text-align: center;
       justify-content:center;
+
+      & p {
+        font-size: 40px;
+        margin: 1px;
+      }
+
+      & div {
+        width: 225px;
+      }
     }
   </style>
   <script>
@@ -81,17 +97,17 @@
         return response.json();
       })
       .then(data => {
-        data.hourly.slice(1,5).forEach(d => {
+        data.hourly.slice(1,6).forEach(d => {
           const hourlyWeatherDiv = document.querySelector("#hourlyWeather");
 
           const icon = d.weather[0].icon
 
-          const characterElement2 = document.createElement('p');
-          characterElement2.innerHTML = `<div class="weatherIcon">
+          const characterElement2 = document.createElement('div');
+          characterElement2.innerHTML = `
 <p>${timeConverter(d.dt)}</p>
-<img src="icons/${icon}.png" />
+<img wdith=120px height=120px src="icons/${icon}.png" />
 <p>${Math.round(d.temp)}°C</p>
-</div>
+
 `
           hourlyWeatherDiv.append(characterElement2);
 
@@ -118,7 +134,7 @@
 <h1>Weather</h1>
 <div id="currentWeather">
   <div id="currentWeatherIconContainer">
-    <img id="currentWeatherIcon"/>
+      <img width="200" height="200" id="currentWeatherIcon"/>
   </div>
   <p id="currentWeatherText"></p>
 </div>
