@@ -9,10 +9,10 @@
       src: url('fonts/GothamRnd-Bold.ttf') format('truetype');
     }
 
-    h1{
+    h1 {
       text-align: center;
-      font-size: 100px ;
-      margin: 40px 0  20px 0;
+      font-size: 100px;
+      margin: 40px 0 20px 0;
     }
 
     body {
@@ -22,7 +22,7 @@
     #currentWeather {
       display: flex;
       align-content: center;
-      justify-content:center;
+      justify-content: center;
     }
 
     #currentWeatherText {
@@ -31,26 +31,27 @@
     }
 
 
-    #hourlyWeather >p {
+    #hourlyWeather > p {
       margin: 02px;
     }
 
-    #currentWeatherIconContainer{
+    #currentWeatherIconContainer {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 200px; /* Or any other value */
     }
 
-    #currentWeatherIcon{
-      height: 100% ;
+    #currentWeatherIcon {
+      height: 100%;
       vertical-align: middle;
     }
+
     #hourlyWeather {
       display: flex;
       align-content: center;
       text-align: center;
-      justify-content:center;
+      justify-content: center;
 
       & p {
         font-size: 40px;
@@ -61,6 +62,16 @@
         width: 225px;
       }
     }
+
+    #quote{
+      font-size: 40px;
+      padding: 80px 40px;
+    }
+    #quoteAuthor {
+      text-align: right;
+    }
+
+
   </style>
   <script>
     fetch('https://api.openweathermap.org/data/2.5/weather?q=Sydney&appid=ece0d8b1e9f26bc9f8b45549d4585e47')
@@ -97,7 +108,7 @@
         return response.json();
       })
       .then(data => {
-        data.hourly.slice(1,6).forEach(d => {
+        data.hourly.slice(1, 6).forEach(d => {
           const hourlyWeatherDiv = document.querySelector("#hourlyWeather");
 
           const icon = d.weather[0].icon
@@ -118,6 +129,16 @@
         console.log('There has been a problem with your fetch operation: ', error);
       });
 
+    fetch('https://api.quotable.io/random')
+      .then(response => response.json())
+      .then(data => {
+        const quoteText = document.querySelector("#quoteText");
+        quoteText.innerText = data.content
+        const quoteAuthor = document.querySelector("#quoteAuthor");
+        quoteAuthor.innerText = `-${data.author}`
+
+        console.log(`${data.content} —${data.author}`)
+      })
 
     function timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000).toLocaleTimeString('en-US',
@@ -134,11 +155,15 @@
 <h1>Weather</h1>
 <div id="currentWeather">
   <div id="currentWeatherIconContainer">
-      <img width="200" height="200" id="currentWeatherIcon"/>
+    <img width="200" height="200" id="currentWeatherIcon"/>
   </div>
   <p id="currentWeatherText"></p>
 </div>
 <div id="hourlyWeather"></div>
+<div id="quote">
+  <div id="quoteText"></div>
+  <div id="quoteAuthor"></div>
+</div>
 </body>
 
 </html>
